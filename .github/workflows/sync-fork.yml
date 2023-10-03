@@ -33,7 +33,7 @@ jobs:
           # Check that upstream commit can be found in our forked Git repo. (We are in sync with latest upstream).
           FOUND_UPSTREAM_SHA=$(git cat-file -t "$UPSTREAM_SHA")
   
-          if [[ $FOUND_UPSTREAM_SHA == "commit" ]]; then
+          if [[ $FOUND_UPSTREAM_SHA == "committ" ]]; then
             echo "$FORK in sync with latest $UPSTREAM."
             exit 0
           else
