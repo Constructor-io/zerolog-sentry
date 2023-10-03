@@ -19,8 +19,8 @@ jobs:
           FORK: "https://github.com/Constructor-io/zerolog-sentry"
           UPSTREAM: "https://github.com/archdx/zerolog-sentry"
           UPSTREAM_BRANCH: "master"
-          SLACK_WEBHOOK_URL: ${{ secrets.$SLACK_WEBHOOK_URL }}
-          SLACK_MENTIONS: ${{ secrets.$SLACK_MENTIONS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MENTIONS: ${{ secrets.SLACK_MENTIONS }}
         run: |
           # Get SHA of the latest commit on from original Git repo (UPSTREAM).
           UPSTREAM_SHA=$(git ls-remote $UPSTREAM $UPSTREAM_BRANCH | awk '{print $1;}')
