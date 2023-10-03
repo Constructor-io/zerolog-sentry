@@ -26,6 +26,8 @@ jobs:
           UPSTREAM_SHA=$(git ls-remote $UPSTREAM $UPSTREAM_BRANCH | awk '{print $1;}')
           echo "Upstream SHA: $UPSTREAM_SHA"
 
+          ls -l
+          
           # Check that upstream commit can be found in our forked Git repo. (We are in sync with latest upstream).
           FOUND_UPSTREAM_SHA=$(git cat-file -t "$UPSTREAM_SHA")
   
