@@ -14,7 +14,8 @@ jobs:
         working-directory: ./
     steps:
       - uses: actions/checkout@v3
-        fetch-depth: 0
+        with:
+          fetch-depth: 0
       - name: Sync fork
         env:
           FORK: "https://github.com/Constructor-io/zerolog-sentry"
