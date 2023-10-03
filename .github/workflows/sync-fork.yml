@@ -15,31 +15,35 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Sync fork
+        env:
+          FORK: "https://github.com/Constructor-io/zerolog-sentry"
+          UPSTREAM: "https://github.com/archdx/zerolog-sentry"
+          UPSTREAM_BRANCH: "master"
+          SLACK_WEBHOOK_URL: ${{ secrets.$SLACK_WEBHOOK_URL }}
+          SLACK_MENTIONS: ${{ secrets.$SLACK_MENTIONS }}
         run: |
-          git config --global user.name 'Sven Njegac'
-          git config --global user.email 'sven.njegac@constructor.io'
-          
-          echo "Hi there"
-          ls -l
-          echo "bye"
-          
-#          # "git checkout master" is unnecessary, already here by default
-#          git pull --unshallow  # this option is very important, you would get
-#                                # complains about unrelated histories without it.
-#                                # (but actions/checkout@v2 can also be instructed
-#                                # to fetch all git depth right from the start)
+          # Get SHA of the latest commit on from original Git repo (UPSTREAM).
+          UPSTREAM_SHA=$(git ls-remote $UPSTREAM $UPSTREAM_BRANCH | awk '{print $1;}')
+          echo "Upstream SHA: $UPSTREAM_SHA"
 
-#          git remote add upstream https://github.com/example/test.git
-#          git fetch upstream
-#
-#          # Neither forget the -b opt,
-#          # the feature/x ref is ambiguous at this stage
-#          git checkout -b feature/x origin/feature/x
-#          git merge --no-edit upstream/feature/x
-#          git push origin feature/x
-#
-#          git checkout master
-#          git merge --no-edit upstream/master
-#          git push origin master
-
-          # etc
+          # Check that upstream commit can be found in our forked Git repo. (We are in sync with latest upstream).
+          FOUND_UPSTREAM_SHA=$(git cat-file -t "$UPSTREAM_SHA")
+  
+          if [[ $FOUND_UPSTREAM_SHA == "commit" ]]; then
+            echo "$FORK in sync with latest $UPSTREAM."
+            exit 0
+          else
+            read -r -d '' SLACK_MESSAGE <<-EOM
+            {
+              "text": "*Issue:* FORK NOT IN SYNC WITH LATEST UPSTREAM.\n*Fork:* $FORK\n*Upstream:* $UPSTREAM\n*Upstream commit SHA:* $UPSTREAM_SHA\n*Assigned to:* $SLACK_MENTIONS",
+            }
+            EOM
+            SLACK_WEBHOOK_RESPONSE=$(curl -X POST -H 'Content-type: application/json' --data "$SLACK_MESSAGE" $SLACK_WEBHOOK_URL)
+            if [[ $SLACK_WEBHOOK_RESPONSE == "ok" ]]; then
+              echo "Slack message sent successfully."
+              exit 1
+            else
+              echo "Slack message failed to send with error: $SLACK_WEBHOOK_RESPONSE"
+              exit 2
+            fi
+          fi
