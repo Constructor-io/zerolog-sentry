@@ -16,7 +16,7 @@ jobs:
         env:
           FORK: "https://github.com/Constructor-io/zerolog-sentry"
           UPSTREAM: "https://github.com/archdx/zerolog-sentry"
-          UPSTREAM_BRANCH: "fea/linter"
+          UPSTREAM_BRANCH: "master"
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MENTIONS: ${{ secrets.SLACK_MENTIONS }}
         run: |
