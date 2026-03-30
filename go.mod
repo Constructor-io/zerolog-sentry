@@ -3,7 +3,7 @@ module github.com/Constructor-io/zerolog-sentry
 go 1.24.0
 
 require (
-	github.com/buger/jsonparser v1.1.1
+	github.com/buger/jsonparser v1.1.2
 	github.com/getsentry/sentry-go v0.43.0
 	github.com/rs/zerolog v1.34.0
 	github.com/stretchr/testify v1.8.4
