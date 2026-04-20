@@ -1,0 +1,18 @@
+name: Claude Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Prompt for Claude"
+        required: true
+        type: string
+
+jobs:
+  claude:
+    uses: Constructor-io/shared-claude-code-resources/.github/workflows/claude.yml@main
+    secrets: inherit
